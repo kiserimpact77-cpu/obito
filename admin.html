@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة التحكم — OBITO DEV</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050406;--panel:#0d090c;--red:#a91f2c;--red2:#e02d3b;--white:#f5f1f2;--muted:#aaa1a5;--line:rgba(224,45,59,.25)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Cairo,sans-serif;padding:30px 16px 80px}
+.wrap{max-width:720px;margin:auto}
+h1{font-size:24px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin-bottom:28px}
+.panel{background:linear-gradient(145deg,#140c10,#070608);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:20px}
+label{display:block;font-size:13px;color:#d9d1d3;margin:14px 0 6px}
+input,textarea{width:100%;background:#050406;border:1px solid #ffffff1a;border-radius:10px;padding:11px 12px;color:#eee;font-family:inherit;font-size:14px;outline:0}
+input:focus,textarea:focus{border-color:var(--red2)}
+textarea{resize:vertical;min-height:70px}
+.row{display:flex;gap:10px}
+.row>div{flex:1}
+button{cursor:pointer;border:none;border-radius:10px;padding:12px 18px;font-family:inherit;font-weight:700;font-size:14px}
+.btn-primary{background:var(--red2);color:#fff;width:100%;margin-top:18px}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{background:#1c1416;color:#ddd;border:1px solid #ffffff1a}
+.btn-danger{background:#3a1216;color:#f5b8bd;border:1px solid #a91f2c55;padding:7px 12px;font-size:12px}
+.status{font-size:13px;margin-top:12px;padding:10px 12px;border-radius:8px;display:none}
+.status.ok{display:block;background:#0f2a1c;color:#8ee0ab;border:1px solid #1d5c3a}
+.status.err{display:block;background:#2a0f13;color:#f5a3ac;border:1px solid #5c1d26}
+.status.loading{display:block;background:#1c1a0f;color:#e0d38e;border:1px solid #5c541d}
+.project-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #ffffff12;border-radius:10px;margin-bottom:8px;background:#050406}
+.project-item b{font-size:14px}
+.project-item span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.gate{max-width:420px;margin:80px auto;text-align:center}
+.gate input{margin-top:16px}
+.hint{color:#655b5f;font-size:11px;margin-top:6px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="wrap gate" id="gate">
+  <h1>🔒 لوحة التحكم</h1>
+  <p class="sub">أدخل GitHub Access Token للمتابعة</p>
+  <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
+  <button class="btn-primary" id="loginBtn" style="margin-top:14px">دخول</button>
+  <p class="hint">التوكن بيتخزن في متصفحك فقط (localStorage) ولا يُرسل لأي مكان غير GitHub مباشرة. يمكنك توليده من:
+  GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens، وحدد صلاحية "Contents: Read and write" على ريبو obito فقط.</p>
+</div>
+
+<div class="wrap" id="panel" style="display:none">
+  <h1>لوحة تحكم المشاريع</h1>
+  <p class="sub">kiserimpact77-cpu / obito</p>
+
+  <div class="panel">
+    <h3 style="margin:0 0 4px">إضافة مشروع جديد</h3>
+    <label>اسم المشروع</label>
+    <input id="pTitle" placeholder="مثال: مزاد الأساطير">
+    <label>الوصف</label>
+    <textarea id="pDesc" placeholder="وصف قصير للمشروع..."></textarea>
+    <label>رابط المشروع</label>
+    <input id="pLink" placeholder="https://...">
+    <label>الوسوم (افصل بفاصلة)</label>
+    <input id="pTags" placeholder="JavaScript, HTML, CSS">
+    <button class="btn-primary" id="addBtn">➕ إضافة المشروع</button>
+    <div class="status" id="addStatus"></div>
+  </div>
+
+  <div class="panel">
+    <h3 style="margin:0 0 14px">المشاريع الحالية</h3>
+    <div id="projectList"><p class="hint">جارِ التحميل...</p></div>
+  </div>
+
+  <button class="btn-secondary" id="logoutBtn">تسجيل الخروج</button>
+</div>
+
+<script>
+const OWNER = 'kiserimpact77-cpu';
+const REPO = 'obito';
+const BRANCH = 'main';
+const FILE_PATH = 'projects.html';
+
+const gate = document.getElementById('gate');
+const panel = document.getElementById('panel');
+const tokenInput = document.getElementById('tokenInput');
+
+function getToken(){ return localStorage.getItem('gh_admin_token'); }
+function setToken(t){ localStorage.setItem('gh_admin_token', t); }
+function clearToken(){ localStorage.removeItem('gh_admin_token'); }
+
+function b64EncodeUnicode(str){
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(_, p1){
+    return String.fromCharCode('0x' + p1);
+  }));
+}
+function b64DecodeUnicode(str){
+  return decodeURIComponent(atob(str).split('').map(function(c){
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+}
+
+async function ghApi(path, options){
+  options = options || {};
+  options.headers = Object.assign({
+    'Authorization': 'Bearer ' + getToken(),
+    'Accept': 'application/vnd.github+json'
+  }, options.headers || {});
+  const res = await fetch('https://api.github.com/repos/' + OWNER + '/' + REPO + path, options);
+  if(!res.ok){
+    const body = await res.text();
+    throw new Error('GitHub API error (' + res.status + '): ' + body);
+  }
+  return res.json();
+}
+
+async function fetchProjectsFile(){
+  return ghApi('/contents/' + FILE_PATH + '?ref=' + BRANCH, { method:'GET' });
+}
+
+async function saveProjectsFile(newHtml, sha, message){
+  return ghApi('/contents/' + FILE_PATH, {
+    method:'PUT',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({
+      message: message,
+      content: b64EncodeUnicode(newHtml),
+      sha: sha,
+      branch: BRANCH
+    })
+  });
+}
+
+function showStatus(el, type, msg){
+  el.className = 'status ' + type;
+  el.textContent = msg;
+}
+
+function buildCardHTML(title, desc, link, tags){
+  const tagSpans = tags.split(',').map(function(t){
+    t = t.trim();
+    return t ? '<span class="tag">' + escapeHtml(t) + '</span>' : '';
+  }).join('');
+  return '\n  <div class="project panel" data-link="' + escapeAttr(link) + '">\n' +
+    '    <div class="preview"><iframe src="' + escapeAttr(link) + '"></iframe></div>\n' +
+    '    <div class="body">\n' +
+    '      <h2>' + escapeHtml(title) + '</h2>\n' +
+    '      <p>' + escapeHtml(desc) + '</p>\n' +
+    '      <div class="tags">' + tagSpans + '</div>\n' +
+    '    </div>\n' +
+    '  </div>';
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function escapeAttr(s){
+  return escapeHtml(s).replace(/"/g,'&quot;');
+}
+
+async function loadProjects(){
+  const listEl = document.getElementById('projectList');
+  listEl.innerHTML = '<p class="hint">جارِ التحميل...</p>';
+  try{
+    const file = await fetchProjectsFile();
+    const html = b64DecodeUnicode(file.content);
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const grid = doc.getElementById('projectsGrid');
+    const cards = grid ? Array.from(grid.querySelectorAll('.project')) : [];
+
+    if(cards.length === 0){
+      listEl.innerHTML = '<p class="hint">لا توجد مشاريع مضافة بعد.</p>';
+      return;
+    }
+
+    listEl.innerHTML = '';
+    cards.forEach(function(card, idx){
+      const title = card.querySelector('h2') ? card.querySelector('h2').textContent : 'بدون اسم';
+      const link = card.getAttribute('data-link') || '';
+      const item = document.createElement('div');
+      item.className = 'project-item';
+      item.innerHTML = '<div><b>' + escapeHtml(title) + '</b><span>' + escapeHtml(link) + '</span></div>' +
+        '<button class="btn-danger" data-idx="' + idx + '">حذف</button>';
+      item.querySelector('button').addEventListener('click', function(){
+        deleteProject(idx);
+      });
+      listEl.appendChild(item);
+    });
+  }catch(err){
+    listEl.innerHTML = '<p class="hint" style="color:#f5a3ac">فشل التحميل: ' + err.message + '</p>';
+  }
+}
+
+async function deleteProject(idx){
+  if(!confirm('متأكد من حذف المشروع؟')) return;
+  try{
+    const file = await fetchProjectsFile();
+    const html = b64DecodeUnicode(file.content);
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const grid = doc.getElementById('projectsGrid');
+    const cards = grid.querySelectorAll('.project');
+    if(cards[idx]) cards[idx].remove();
+
+    const newHtml = '<!doctype html>\n' + doc.documentElement.outerHTML;
+    await saveProjectsFile(newHtml, file.sha, 'Delete project via admin panel');
+    loadProjects();
+  }catch(err){
+    alert('فشل الحذف: ' + err.message);
+  }
+}
+
+document.getElementById('addBtn').addEventListener('click', async function(){
+  const title = document.getElementById('pTitle').value.trim();
+  const desc = document.getElementById('pDesc').value.trim();
+  const link = document.getElementById('pLink').value.trim();
+  const tags = document.getElementById('pTags').value.trim();
+  const statusEl = document.getElementById('addStatus');
+  const btn = document.getElementById('addBtn');
+
+  if(!title || !link){
+    showStatus(statusEl, 'err', 'اسم المشروع والرابط مطلوبين على الأقل.');
+    return;
+  }
+
+  btn.disabled = true;
+  showStatus(statusEl, 'loading', 'جارِ الحفظ...');
+
+  try{
+    const file = await fetchProjectsFile();
+    const html = b64DecodeUnicode(file.content);
+    const cardHtml = buildCardHTML(title, desc, link, tags);
+    const newHtml = html.replace('<main class="projects" id="projectsGrid">', '<main class="projects" id="projectsGrid">' + cardHtml);
+
+    await saveProjectsFile(newHtml, file.sha, 'Add project: ' + title);
+    showStatus(statusEl, 'ok', '✅ تمت إضافة المشروع بنجاح.');
+    document.getElementById('pTitle').value = '';
+    document.getElementById('pDesc').value = '';
+    document.getElementById('pLink').value = '';
+    document.getElementById('pTags').value = '';
+    loadProjects();
+  }catch(err){
+    showStatus(statusEl, 'err', 'فشلت العملية: ' + err.message);
+  }finally{
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('loginBtn').addEventListener('click', function(){
+  const t = tokenInput.value.trim();
+  if(!t){ return; }
+  setToken(t);
+  gate.style.display = 'none';
+  panel.style.display = 'block';
+  loadProjects();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', function(){
+  clearToken();
+  panel.style.display = 'none';
+  gate.style.display = 'block';
+  tokenInput.value = '';
+});
+
+(function init(){
+  if(getToken()){
+    gate.style.display = 'none';
+    panel.style.display = 'block';
+    loadProjects();
+  }
+})();
+</script>
+</body>
+</html>
