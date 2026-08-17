@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Obito Dev — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070607;--panel:#0d0a0c;--panel2:#120d10;--red:#9d2630;
+  --red2:#c33b45;--orange:#b8612d;--text:#f2eeee;--muted:#a9a0a4;
+  --line:rgba(183,54,64,.28);--glow:rgba(157,38,48,.20);
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 75% 15%,rgba(157,38,48,.16),transparent 28%),radial-gradient(circle at 20% 50%,rgba(91,39,91,.10),transparent 32%),var(--bg);color:var(--text);font-family:Cairo,Arial,sans-serif}
+a{color:inherit;text-decoration:none}button,input,textarea{font:inherit}
+button{cursor:pointer}.app{min-height:100vh;position:relative;overflow:hidden}
+.app:before{content:"";position:fixed;inset:-20%;pointer-events:none;background:radial-gradient(circle at 60% 25%,rgba(194,48,62,.07),transparent 24%),radial-gradient(circle at 30% 80%,rgba(111,45,111,.06),transparent 25%);filter:blur(30px)}
+.container{width:min(1100px,92%);margin:auto}.page{animation:fade .55s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.04);position:relative;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}.mark{width:35px;height:35px;border:2px solid var(--red2);border-radius:50%;position:relative;box-shadow:0 0 18px var(--glow)}
+.mark:after{content:"";position:absolute;inset:5px;border:2px solid var(--orange);border-radius:50%;border-left-color:transparent;transform:rotate(25deg)}
+.brand span{color:var(--red2)}
+.links{display:flex;gap:27px;font-size:14px;color:#bbb}
+.links a{transition:.2s}.links a:hover,.links a.active{color:#fff}
+.links a.active{color:var(--red2)}
+.nav-actions{display:flex;gap:8px}.icon-btn{width:36px;height:36px;border:1px solid var(--line);border-radius:9px;background:#0a0809;color:#ddd}
+.hero{min-height:500px;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:20px;padding:45px 0}
+.hero-copy{padding-right:25px}.eyebrow{color:var(--red2);font-size:13px;font-weight:700}
+.hero h1{font-size:clamp(40px,6vw,72px);line-height:1.1;margin:12px 0}.hero h1 span{color:var(--red2)}
+.hero p{color:var(--muted);max-width:520px;line-height:1.9}.cta{display:inline-flex;align-items:center;gap:10px;margin-top:18px;border:1px solid var(--red2);color:#fff;background:linear-gradient(135deg,rgba(157,38,48,.2),rgba(0,0,0,.2));padding:12px 22px;border-radius:8px;transition:.25s}.cta:hover{transform:translateY(-2px);box-shadow:0 0 25px var(--glow)}
+.hero-art{height:430px;display:flex;align-items:end;justify-content:center;position:relative}.obito{width:310px;height:390px;border-radius:46% 46% 12px 12px;background:linear-gradient(145deg,#18131a,#050505);position:relative;box-shadow:0 0 70px rgba(157,38,48,.13)}
+.obito:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.08),transparent 60%);clip-path:polygon(0 0,100% 0,75% 100%,0 100%)}
+.mask{position:absolute;top:70px;left:50%;transform:translateX(-50%);width:125px;height:125px;border-radius:50%;background:#a95628;border:4px solid #140c0c;box-shadow:0 0 20px #000}.mask:before{content:"";position:absolute;inset:11px;border:5px solid #2c1712;border-radius:50%;border-right-color:transparent;transform:rotate(-28deg)}.mask:after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#090707;left:53px;top:53px;box-shadow:0 0 10px #000}
+.cloak-cloud{position:absolute;inset:auto 20px 25px;height:110px;background:radial-gradient(circle,#5e1720 0 20%,transparent 21%),radial-gradient(circle at 40% 30%,#681a23 0 20%,transparent 21%);opacity:.85}
+.rose{font-size:58px;filter:drop-shadow(0 8px 14px rgba(0,0,0,.5));position:absolute;bottom:30px;left:50%;transform:translateX(-50%)}
+.card{background:linear-gradient(145deg,rgba(20,14,17,.95),rgba(8,7,8,.95));border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 45px rgba(0,0,0,.25);padding:25px}
+.section{margin:20px 0}.section-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}.section-head h2{margin:0;font-size:25px}.section-head:before,.section-head:after{content:"";height:1px;background:linear-gradient(90deg,transparent,var(--red));flex:1}.section-head:after{background:linear-gradient(90deg,var(--red),transparent)}
+.about{display:grid;grid-template-columns:1.4fr .8fr;gap:25px}.about h3{font-size:27px;margin:0 0 10px}.about p{color:var(--muted);line-height:2}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{border:1px solid var(--line);padding:18px;border-radius:10px;background:#0a0809}.stat b{font-size:27px;color:var(--red2);display:block}.stat small{color:#aaa}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.skill{text-align:center;padding:22px 10px;transition:.25s}.skill:hover,.project:hover{transform:translateY(-4px);border-color:rgba(195,59,69,.55);box-shadow:0 15px 45px rgba(157,38,48,.12)}.skill .ico{font-size:30px;margin-bottom:8px}.skill span{color:#ddd}
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.project{overflow:hidden;transition:.25s;padding:0}.preview{height:270px;background:#050505;border-bottom:1px solid var(--line);position:relative}.preview iframe{width:100%;height:100%;border:0;display:block}.preview .fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#777;background:#080708;z-index:-1}.project-body{padding:18px}.project-body h3{margin:0 0 6px}.project-body p{color:var(--muted);font-size:14px;line-height:1.7;margin:0 0 12px}.tags{display:flex;gap:7px;flex-wrap:wrap}.tag{font-size:11px;color:#d9bfc2;border:1px solid var(--line);padding:4px 8px;border-radius:20px}
+.contact{text-align:center;padding:50px 20px}.wa{display:inline-flex;align-items:center;gap:10px;border:1px solid #2e8b57;color:#bce8ce;background:rgba(24,120,72,.12);padding:13px 25px;border-radius:9px;margin-top:15px}
+.footer{margin-top:45px;padding:28px 0;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;color:#777;font-size:12px}
+.form{display:grid;gap:12px;max-width:700px}.input{width:100%;background:#080708;color:#eee;border:1px solid var(--line);border-radius:9px;padding:12px;outline:none}.input:focus{border-color:var(--red2);box-shadow:0 0 0 3px rgba(195,59,69,.08)}textarea.input{min-height:120px;resize:vertical}.admin-list{display:grid;gap:10px;margin-top:20px}.admin-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:9px;background:#0a0809}.danger{border:1px solid #7e2730;background:transparent;color:#ef7e85;padding:8px 12px;border-radius:7px}.edit{border:1px solid #555;background:transparent;color:#ddd;padding:8px 12px;border-radius:7px}.admin-actions{display:flex;gap:8px}.search-box{margin:20px auto;max-width:500px}.hidden-entry{display:inline-block;margin-top:8px;color:#555;font-size:11px}
+@media(max-width:800px){.links{display:none}.hero{grid-template-columns:1fr;text-align:center}.hero-copy{padding:0}.hero p{margin-inline:auto}.hero-art{height:390px}.about{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.projects{grid-template-columns:1fr}.footer{flex-direction:column;gap:10px}.admin-row{align-items:flex-start;flex-direction:column}}
+@media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.hero-art{transform:scale(.85);margin:-25px 0}.card{padding:18px}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+const {useState,useEffect}=React;
+
+const defaultProjects=[
+ {id:1,name:"TaskFlow API",desc:"واجهة API لإدارة المهام والمستخدمين بطريقة منظمة وسريعة.",url:"https://example.com",tags:["React","JavaScript"]},
+ {id:2,name:"Note Cloud",desc:"تطبيق ملاحظات بسيط بواجهة نظيفة وتجربة استخدام هادئة.",url:"https://example.com",tags:["HTML","CSS"]},
+ {id:3,name:"DataPulse",desc:"لوحة عرض بيانات ومؤشرات أداء بتصميم عصري.",url:"https://example.com",tags:["React","CSS"]}
+];
+const KEY="obito_projects";
+function getProjects(){try{return JSON.parse(localStorage.getItem(KEY))||defaultProjects}catch{return defaultProjects}}
+function saveProjects(p){localStorage.setItem(KEY,JSON.stringify(p))}
+function path(){return location.hash.replace("#","")||"/"}
+function go(p){location.hash=p}
+
+function Navbar({search,setSearch}){const [secret,setSecret]=useState(false);useEffect(()=>setSecret(search.toLowerCase()==="obito"),[search]);
+return <><nav className="nav container"><a className="brand" href="#/"><i className="mark"></i>OBITO <span>DEV</span></a><div className="links">
+{[["/","الرئيسية"],["/about","من أنا"],["/skills","المهارات"],["/projects","الأعمال"],["/contact","تواصل"]].map(([p,t])=><a className={path()===p?"active":""} href={"#"+p} key={p}>{t}</a>)}</div><div className="nav-actions"><button className="icon-btn" onClick={()=>document.querySelector("#site-search")?.focus()}>⌕</button></div></nav>
+<div className="search-box container"><input id="site-search" className="input" value={search} onChange={e=>setSearch(e.target.value)} placeholder="ابحث في الموقع..." />{secret&&<button className="hidden-entry cta" onClick={()=>go("/admin")}>دخول لوحة التحكم</button>}</div></>}
+
+function Footer(){return <footer className="footer container"><span>© 2026 Obito Dev</span><span>Code is my weapon · Logic is my illusion.</span></footer>}
+function SectionTitle({children}){return <div className="section-head"><h2>{children}</h2></div>}
+
+function Home(){return <main className="page"><section className="hero container"><div className="hero-copy"><div className="eyebrow">OBITO DEV</div><h1>مرحبًا، <span>عزيزي.</span></h1><p>أنت تبحث عن مطوّر؟ هذا مؤسف... لكن بما أنك وصلت إلى هنا، تفضل زهرة 🌹</p><a className="cta" href="#/projects">🌹 تفضل زهرة</a></div><div className="hero-art"><div className="obito"><div className="mask"></div><div className="cloak-cloud"></div><div className="rose">🌹</div></div></div></section></main>}
+
+function About(){return <main className="page container section"><SectionTitle>من أنا</SectionTitle><div className="about card"><div><h3>أبني. أكسر. أصلح. <span style={{color:"var(--red2)"}}>أكرر.</span></h3><p>مطوّر Full-Stack مهتم ببناء تجارب ويب سريعة ونظيفة. أحب المنطق، الأداء، والتعامل الهادئ مع المشاكل المعقدة.</p></div><div className="stats"><div className="stat"><b>10+</b><small>مشاريع</small></div><div className="stat"><b>4+</b><small>تقنيات</small></div><div className="stat"><b>∞</b><small>سطر كود</small></div><div className="stat"><b>24/7</b><small>تفكير</small></div></div></div></main>}
+
+function Skills(){let s=[["⚛️","React"],["🟨","JavaScript"],["🎨","CSS"],["🌐","HTML"]];return <main className="page container section"><SectionTitle>المهارات</SectionTitle><div className="grid">{s.map(x=><div className="skill card" key={x[1]}><div className="ico">{x[0]}</div><span>{x[1]}</span></div>)}</div></main>}
+
+function Projects({projects}){return <main className="page container section"><SectionTitle>أهم الأعمال</SectionTitle><div className="projects">{projects.map(p=><article className="project card" key={p.id}><div className="preview"><div className="fallback">المعاينة غير متاحة لهذا الموقع</div><iframe src={p.url} title={p.name} loading="lazy"></iframe></div><div className="project-body"><h3>{p.name}</h3><p>{p.desc}</p><div className="tags">{(p.tags||[]).map(t=><span className="tag" key={t}>{t}</span>)}</div></div></article>)}</div></main>}
+
+function Contact(){return <main className="page container section"><div className="contact card"><SectionTitle>تواصل</SectionTitle><p style={{color:"var(--muted)"}}>لو حابب تتواصل، واتساب موجود.</p><a className="wa" target="_blank" rel="noreferrer" href="https://wa.me/201024759375">💬 تواصل عبر واتساب</a></div></main>}
+
+async function sha256(text){const data=new TextEncoder().encode(text);const hash=await crypto.subtle.digest("SHA-256",data);return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,"0")).join("")}
+const PASS_HASH="47d841dfce9d8d49988a5bd0fe17cf1f110007971079aa89132e286370705084";
+
+function Admin({projects,setProjects}){const [ok,setOk]=useState(false),[pass,setPass]=useState(""),[editing,setEditing]=useState(null),[name,setName]=useState(""),[desc,setDesc]=useState(""),[url,setUrl]=useState(""),[msg,setMsg]=useState("");
+useEffect(()=>{if(sessionStorage.getItem("obito_admin")==="1")setOk(true)},[]);
+async function login(){if(await sha256(pass)===PASS_HASH){sessionStorage.setItem("obito_admin","1");setOk(true);setMsg("")}else setMsg("كلمة المرور غير صحيحة")}
+function reset(){setEditing(null);setName("");setDesc("");setUrl("")}
+function save(){if(!name||!url)return setMsg("اكتب اسم المشروع والرابط.");let p={id:editing||Date.now(),name,desc,url,tags:["React","JavaScript"]};let arr=editing?projects.map(x=>x.id===editing?p:x):[...projects,p];setProjects(arr);saveProjects(arr);reset();setMsg("تم الحفظ")}
+if(!ok)return <main className="page container section"><div className="card" style={{maxWidth:500,margin:"50px auto"}}><SectionTitle>لوحة التحكم</SectionTitle><div className="form"><input className="input" type="password" value={pass} onChange={e=>setPass(e.target.value)} placeholder="كلمة المرور"/><button className="cta" onClick={login}>دخول</button>{msg&&<small style={{color:"#e56b73"}}>{msg}</small>}</div></div></main>;
+return <main className="page container section"><SectionTitle>لوحة التحكم</SectionTitle><div className="card"><p>عدد المشاريع الكلي: <b style={{color:"var(--red2)"}}>{projects.length}</b></p><div className="form"><input className="input" value={name} onChange={e=>setName(e.target.value)} placeholder="اسم المشروع"/><textarea className="input" value={desc} onChange={e=>setDesc(e.target.value)} placeholder="وصف المشروع"></textarea><input className="input" value={url} onChange={e=>setUrl(e.target.value)} placeholder="رابط الموقع"/><div><button className="cta" onClick={save}>{editing?"حفظ التعديل":"إضافة مشروع"}</button>{editing&&<button className="edit" style={{marginRight:8}} onClick={reset}>إلغاء</button>}</div>{msg&&<small>{msg}</small>}</div><div className="admin-list">{projects.map(p=><div className="admin-row" key={p.id}><div><b>{p.name}</b><div style={{color:"#777",fontSize:12}}>{p.url}</div></div><div className="admin-actions"><button className="edit" onClick={()=>{setEditing(p.id);setName(p.name);setDesc(p.desc);setUrl(p.url)}}>تعديل</button><button className="danger" onClick={()=>{let a=projects.filter(x=>x.id!==p.id);setProjects(a);saveProjects(a)}}>حذف</button></div></div>)}</div></div></main>}
+
+function App(){const [route,setRoute]=useState(path()),[search,setSearch]=useState(""),[projects,setProjects]=useState(getProjects());
+useEffect(()=>{const f=()=>setRoute(path());addEventListener("hashchange",f);return()=>removeEventListener("hashchange",f)},[]);
+let content=route==="/"?<Home/>:route==="/about"?<About/>:route==="/skills"?<Skills/>:route==="/projects"?<Projects projects={projects}/>:route==="/contact"?<Contact/>:route==="/admin"?<Admin projects={projects} setProjects={setProjects}/>:<Home/>;
+return <div className="app"><Navbar search={search} setSearch={setSearch}/>{content}<Footer/></div>}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
